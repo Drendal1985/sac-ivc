@@ -31,6 +31,8 @@ class Persona extends Model
         return $this->belongsToMany(
             Credito::class,
             'credito_persona'
-        )->withPivot('rol');
+        )
+        ->withPivot('rol')
+        ->withTimestamps();
     }
 }

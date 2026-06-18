@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeneficiarioController;
+use App\Http\Controllers\CreditoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,5 +38,10 @@ Route::middleware(['auth'])->group(function () {
     })->middleware('role:Administrador');
 
 });
+
+Route::resource(
+    'creditos',
+    CreditoController::class
+);
 
 require __DIR__.'/auth.php';

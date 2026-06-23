@@ -16,18 +16,53 @@ class CreditoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $creditos = Credito::with([
-            'lineaCredito',
-            'personas'
-        ])
-        ->orderBy('id', 'desc')
-        ->paginate(20);
+        $query = Credito::query()
+            ->with([
+                'lineaCredito',
+                'personas'
+            ]);
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+
+            $query->where(function ($q) use ($buscar) {
+
+                $q->where('numero_credito', 'like', "%{$buscar}%")
+                ->orWhereHas('personas', function ($q2) use ($buscar) {
+
+                        $q2->where('apellido', 'like', "%{$buscar}%")
+                        ->orWhere('nombre', 'like', "%{$buscar}%")
+                        ->orWhere('numero_documento', 'like', "%{$buscar}%");
+                });
+            });
+        }
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        if ($request->filled('linea_credito_id')) {
+            $query->where(
+                'linea_credito_id',
+                $request->linea_credito_id
+            );
+        }
+
+        $creditos = $query
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        $lineasCredito = LineaCredito::orderBy('nombre')->get();
 
         return view(
             'creditos.index',
-            compact('creditos')
+            compact(
+                'creditos',
+                'lineasCredito'
+            )
         );
     }
 
@@ -243,8 +278,28 @@ class CreditoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Credito $credito)
     {
-        //
+        $tienePagos = $credito->cuotas()
+            ->whereHas('imputacionesPago')
+            ->exists();
+
+        if ($tienePagos) {
+            return back()->with(
+                'error',
+                'No se puede eliminar un crédito con pagos registrados.'
+            );
+        }
+
+        $credito->delete();
+
+        return redirect()
+            ->route('creditos.index')
+            ->with(
+                'success',
+                'Crédito eliminado correctamente.'
+            );
     }
+
+    
 }

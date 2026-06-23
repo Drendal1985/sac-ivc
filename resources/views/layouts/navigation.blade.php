@@ -2,7 +2,7 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
+            <div class="flex items-center">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
@@ -11,7 +11,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden sm:flex items-center space-x-8 sm:ms-10">
 
                     <x-nav-link
                         :href="route('dashboard')"
@@ -19,46 +19,123 @@
                         Dashboard
                     </x-nav-link>
 
-                    <x-nav-link
-                        :href="route('beneficiarios.index')"
-                        :active="request()->routeIs('beneficiarios.*')">
-                        Beneficiarios
-                    </x-nav-link>
+                    @canany([
+                        'beneficiarios.ver',
+                        'creditos.ver',
+                        'cuotas.ver',
+                        'pagos.ver'
+                    ])
+                    <x-dropdown-menu title="Cartera">
 
-                    <x-nav-link
-                        href="#">
-                        Créditos
-                    </x-nav-link>
+                        @can('beneficiarios.ver')
+                            <x-dropdown-menu-item
+                                :href="route('beneficiarios.index')">
+                                Beneficiarios
+                            </x-dropdown-menu-item>
+                        @endcan
 
-                    <x-nav-link
-                        href="#">
-                        Cuotas
-                    </x-nav-link>
+                        @can('creditos.ver')
+                            <x-dropdown-menu-item
+                                :href="route('creditos.index')">
+                                Créditos
+                            </x-dropdown-menu-item>
+                        @endcan
 
-                    <x-nav-link
-                        href="#">
-                        Pagos
-                    </x-nav-link>
+                        @can('cuotas.ver')
+                            <x-dropdown-menu-item href="#">
+                                Cuotas
+                            </x-dropdown-menu-item>
+                        @endcan
 
-                    <x-nav-link
-                        href="#">
-                        Morosidad
-                    </x-nav-link>
+                        @can('pagos.ver')
+                            <x-dropdown-menu-item href="#">
+                                Pagos
+                            </x-dropdown-menu-item>
+                        @endcan
 
-                    <x-nav-link
-                        href="#">
-                        Recupero
-                    </x-nav-link>
+                    </x-dropdown-menu>
+                    @endcanany
 
-                    <x-nav-link
-                        href="#">
-                        Reportes
-                    </x-nav-link>
+                    @canany([
+                        'mora.ver',
+                        'campanias.ver',
+                        'recupero.ver'
+                    ])
+                    <x-dropdown-menu title="Recupero">
 
-                    <x-nav-link
-                        href="#">
-                        Administración
-                    </x-nav-link>
+                        @can('mora.ver')
+                            <x-dropdown-menu-item href="#">
+                                Morosidad
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                        @can('campanias.ver')
+                            <x-dropdown-menu-item href="#">
+                                Campañas
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                        @can('recupero.ver')
+                            <x-dropdown-menu-item href="#">
+                                Recupero
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                    </x-dropdown-menu>
+                    @endcanany
+
+                    @canany([
+                        'reportes.cartera',
+                        'reportes.cobranzas',
+                        'reportes.auditoria'
+                    ])
+                    <x-dropdown-menu title="Reportes">
+
+                        @can('reportes.cartera')
+                            <x-dropdown-menu-item href="#">
+                                Cartera
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                        @can('reportes.cobranzas')
+                            <x-dropdown-menu-item href="#">
+                                Cobranzas
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                        @can('reportes.auditoria')
+                            <x-dropdown-menu-item href="#">
+                                Auditoría
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                    </x-dropdown-menu>
+                    @endcanany
+
+                    @canany(['usuarios.ver','roles.ver','parametros.ver'])
+                    <x-dropdown-menu title="Administración">
+
+                        @can('usuarios.ver')
+                            <x-dropdown-menu-item 
+                                :href="route('usuarios.index')">
+                                Usuarios
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                        @can('roles.ver')
+                            <x-dropdown-menu-item href="#">
+                                Roles
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                        @can('parametros.ver')
+                            <x-dropdown-menu-item href="#">
+                                Parámetros
+                            </x-dropdown-menu-item>
+                        @endcan
+
+                    </x-dropdown-menu>
+                    @endcanany
 
                 </div>
             </div>
@@ -115,46 +192,57 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @can('beneficiarios.ver')
             <x-responsive-nav-link
                 :href="route('beneficiarios.index')"
                 :active="request()->routeIs('beneficiarios.*')">
                 Beneficiarios
             </x-responsive-nav-link>
+            @endcan
+            @can('creditos.ver')
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Créditos
             </x-responsive-nav-link>
+            @endcan
+            
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Cuotas
             </x-responsive-nav-link>
+            
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Pagos
             </x-responsive-nav-link>
+            
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Morosidad
             </x-responsive-nav-link>
+            
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Recupero
             </x-responsive-nav-link>
+            
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Reportes
             </x-responsive-nav-link>
+            
             <x-responsive-nav-link
-                :href="route('beneficiarios.index')"
-                :active="request()->routeIs('beneficiarios.*')">
+                :href="route('creditos.index')"
+                :active="request()->routeIs('creditos.*')">
                 Administración
             </x-responsive-nav-link>
+            
         </div>
 
         <!-- Responsive Settings Options -->

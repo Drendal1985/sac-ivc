@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Beneficiarios
@@ -131,42 +130,24 @@
                                     {{ $beneficiario->estado }}
                                 </td>
 
-                                <td class="border px-4 py-2 text-center">
+                                <td class="px-4 py-2">
 
-                                    <a
-                                        href="{{ route('beneficiarios.show', $beneficiario) }}"
-                                        class="text-green-600">
+                                    <x-table.actions>
 
-                                        Ver
+                                        <x-buttons.icon-show
+                                            :href="route('beneficiarios.show', $beneficiario)"
+                                            title="Ver beneficiario" />
 
-                                    </a>
+                                        <x-buttons.icon-edit
+                                            :href="route('beneficiarios.edit', $beneficiario)"
+                                            title="Editar beneficiario" />
 
-                                    |
-                                    @can('beneficiarios.editar')
-                                    <a href="{{ route('beneficiarios.edit', $beneficiario->id) }}"
-                                       class="text-green-600 hover:underline">
-                                        Editar
-                                    </a>
-                                    @endcan
+                                        <x-buttons.icon-delete
+                                            :action="route('beneficiarios.destroy', $beneficiario)"
+                                            title="Eliminar beneficiario"
+                                            message="¿Eliminar el beneficiarios {{ $beneficiario->numero_documento }}?" />
 
-                                    @can('beneficiarios.eliminar')
-                                    <form
-                                        action="{{ route('beneficiarios.destroy', $beneficiario->id) }}"
-                                        method="POST"
-                                        style="display:inline">
-
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            onclick="return confirm('¿Eliminar beneficiario?')">
-
-                                            Eliminar
-
-                                        </button>
-
-                                    </form>
-                                    @endcan
+                                    </x-table.actions>
 
                                 </td>
 

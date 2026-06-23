@@ -13,30 +13,68 @@ class RoleSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]
         ->forgetCachedPermissions();
 
-        /*Role::firstOrCreate([
-            'name' => 'Administrador',
-            'guard_name' => 'web'
-        ]);
+        $permisos = [
 
-        Role::firstOrCreate([
-            'name' => 'Operador',
-            'guard_name' => 'web'
-        ]);
+        // Beneficiarios
+        'beneficiarios.ver',
+        'beneficiarios.crear',
+        'beneficiarios.editar',
+        'beneficiarios.eliminar',
 
-        Role::firstOrCreate([
-            'name' => 'Supervisor',
-            'guard_name' => 'web'
-        ]);
+        // Créditos
+        'creditos.ver',
+        'creditos.crear',
+        'creditos.editar',
+        'creditos.eliminar',
 
-        Role::firstOrCreate([
-            'name' => 'Recupero',
-            'guard_name' => 'web'
-        ]);
+        // Cuotas
+        'cuotas.ver',
+        'cuotas.generar',
+        'cuotas.editar',
+        'cuotas.anular',
 
-        Role::firstOrCreate([
-            'name' => 'Auditor',
-            'guard_name' => 'web'
-        ]);*/
+        // Pagos
+        'pagos.ver',
+        'pagos.registrar',
+        'pagos.imputar',
+        'pagos.anular',
+
+        // Mora
+        'mora.ver',
+        'mora.gestionar',
+
+        // Campañas
+        'campanias.ver',
+        'campanias.gestionar',
+
+        // Recupero
+        'recupero.ver',
+        'recupero.gestionar',
+
+        // Reportes
+        'reportes.cartera',
+        'reportes.cobranzas',
+        'reportes.auditoria',
+
+        // Administración
+        'usuarios.ver',
+        'usuarios.crear',
+        'usuarios.editar',
+
+        'roles.ver',
+        'roles.crear',
+        'roles.editar',
+
+        'parametros.ver',
+        'parametros.editar',
+    ];
+
+    foreach ($permisos as $permiso) {
+        Permission::firstOrCreate([
+            'name' => $permiso,
+            'guard_name' => 'web',
+        ]);
+    }
 
         $admin = Role::firstOrCreate([
             'name' => 'Administrador',
@@ -63,10 +101,6 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-        $admin->syncPermissions(
-            Permission::all()
-        );
-
         $operador->syncPermissions([
             'beneficiarios.ver',
             'beneficiarios.crear',
@@ -88,8 +122,11 @@ class RoleSeeder extends Seeder
             'creditos.ver',
             'cuotas.ver',
             'pagos.ver',
+
             'mora.ver',
-            'reportes.ver',
+
+            'reportes.cartera',
+            'reportes.cobranzas',
         ]);
 
         $recupero->syncPermissions([
@@ -99,7 +136,10 @@ class RoleSeeder extends Seeder
             'recupero.ver',
             'recupero.gestionar',
 
-            'reportes.ver',
+            'campanias.ver',
+            'campanias.gestionar',
+
+            'reportes.cartera',
         ]);
 
         $auditor->syncPermissions([
@@ -107,7 +147,14 @@ class RoleSeeder extends Seeder
             'creditos.ver',
             'cuotas.ver',
             'pagos.ver',
-            'reportes.ver',
+
+            'reportes.cartera',
+            'reportes.cobranzas',
+            'reportes.auditoria',
         ]);
+
+        $admin->syncPermissions(
+            Permission::all()
+        );
     }
 }

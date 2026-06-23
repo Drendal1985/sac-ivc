@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeneficiarioController;
 use App\Http\Controllers\CreditoController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,5 +44,9 @@ Route::resource(
     'creditos',
     CreditoController::class
 );
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('usuarios', UserController::class);
+});
 
 require __DIR__.'/auth.php';

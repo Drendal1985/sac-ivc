@@ -33,6 +33,135 @@
 
                 </div>
 
+                <div class="bg-white shadow rounded-lg p-4 mb-6">
+
+                    <form method="GET">
+
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+                            <div>
+
+                                <label class="block text-sm font-medium mb-1">
+                                    Buscar
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="buscar"
+                                    value="{{ request('buscar') }}"
+                                    placeholder="N° crédito o beneficiario"
+                                    class="w-full rounded border-gray-300">
+
+                            </div>
+
+                            <div>
+
+                                <label class="block text-sm font-medium mb-1">
+                                    Estado
+                                </label>
+
+                                <select
+                                    name="estado"
+                                    class="w-full rounded border-gray-300">
+
+                                    <option value="">
+                                        Todos
+                                    </option>
+
+                                    <option
+                                        value="ACTIVO"
+                                        @selected(request('estado') == 'ACTIVO')>
+                                        ACTIVO
+                                    </option>
+
+                                    <option
+                                        value="PENDIENTE"
+                                        @selected(request('estado') == 'PENDIENTE')>
+                                        PENDIENTE
+                                    </option>
+
+                                    <option
+                                        value="CANCELADO"
+                                        @selected(request('estado') == 'CANCELADO')>
+                                        CANCELADO
+                                    </option>
+
+                                    <option
+                                        value="REFINANCIADO"
+                                        @selected(request('estado') == 'REFINANCIADO')>
+                                        REFINANCIADO
+                                    </option>
+
+                                    <option
+                                        value="JUDICIALIZADO"
+                                        @selected(request('estado') == 'JUDICIALIZADO')>
+                                        JUDICIALIZADO
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div>
+
+                                <label class="block text-sm font-medium mb-1">
+                                    Línea de Crédito
+                                </label>
+
+                                <select
+                                    name="linea_credito_id"
+                                    class="w-full rounded border-gray-300">
+
+                                    <option value="">
+                                        Todas
+                                    </option>
+
+                                    @foreach($lineasCredito as $linea)
+
+                                        <option
+                                            value="{{ $linea->id }}"
+                                            @selected(
+                                                request('linea_credito_id')
+                                                == $linea->id
+                                            )>
+
+                                            {{ $linea->nombre }}
+
+                                        </option>
+
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <div
+                                class="flex items-end gap-2">
+
+                                <button
+                                    type="submit"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+
+                                    Filtrar
+
+                                </button>
+
+                                <a
+                                    href="{{ route('creditos.index') }}"
+                                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+
+                                    Limpiar
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
                 <table class="min-w-full border">
 
                     <thead>
@@ -106,25 +235,24 @@
 
                                 </td>
 
-                                <td class="border p-2">
+                                <td class="px-4 py-2">
 
-                                    <a
-                                        href="{{ route('creditos.show', $credito) }}"
-                                        class="text-blue-600">
+                                    <x-table.actions>
 
-                                        Ver
+                                        <x-buttons.icon-show
+                                            :href="route('creditos.show', $credito)"
+                                            title="Ver detalle" />
 
-                                    </a>
+                                        <x-buttons.icon-edit
+                                            :href="route('creditos.edit', $credito)"
+                                            title="Editar crédito" />
 
-                                    |
+                                        <x-buttons.icon-delete
+                                            :action="route('creditos.destroy', $credito)"
+                                            title="Eliminar crédito"
+                                            message="¿Eliminar el crédito {{ $credito->numero_credito }}?" />
 
-                                    <a
-                                        href="{{ route('creditos.edit', $credito) }}"
-                                        class="text-green-600">
-
-                                        Editar
-
-                                    </a>
+                                    </x-table.actions>
 
                                 </td>
 
